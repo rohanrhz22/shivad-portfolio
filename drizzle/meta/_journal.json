@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1793697346712,
+      "tag": "0000_lively_golden_guardian",
+      "breakpoints": true
+    }
+  ]
+}
