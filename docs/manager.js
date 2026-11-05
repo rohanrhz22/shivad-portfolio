@@ -3,7 +3,7 @@
   const $=s=>document.querySelector(s), dialog=$('#manager');
   const pagesMode=document.documentElement.dataset.pagesEditor === 'true';
   const categories=['Brand films','Products','Spaces','Presentations','People & stories','Experiments'];
-  const defaults=['cfu-XLeZXH4','13XfIpgDFnW89iUTpTxB9p-p1uXIV0w7D','1CtdcPCaLHccBGir5st1dAYHiLr_Ce2CI','kuUCt8yEowc','UGoMkOqnYiI'];
+  const defaults=window.PORTFOLIO_FEATURED || [];
   const originals=new Map(window.FILMS.map(f=>[f.id,f]));
   let draft=[], dirty=false, saving=false, dragged=null, revision=0;
   const reload=document.createElement('button');reload.type='button';reload.className='secondary';reload.textContent='Reload saved collection';reload.hidden=true;

@@ -4,7 +4,7 @@ import vm from 'node:vm';
 const origin='http://127.0.0.1:5173';
 const context={window:{}};vm.runInNewContext(readFileSync('public/catalog.js','utf8'),context);
 const films=context.window.FILMS;
-const featured=['cfu-XLeZXH4','13XfIpgDFnW89iUTpTxB9p-p1uXIV0w7D','1CtdcPCaLHccBGir5st1dAYHiLr_Ce2CI','kuUCt8yEowc','UGoMkOqnYiI'];
+const featured=context.window.PORTFOLIO_FEATURED || [];
 const baseline={items:films.map(f=>({id:f.id,category:f.category,hidden:false,featured:featured.includes(f.id)}))};
 const page=await fetch(origin);assert.equal(page.status,200);assert.match(await page.text(),/shivad-hero.png/);
 for(const path of ['/theme.css','/app.js','/manager.js','/catalog.js','/assets/shivad-hero.png'])assert.equal((await fetch(origin+path)).status,200,path);

@@ -2,9 +2,15 @@
 
 ## Deploy to GitHub Pages
 
-The `docs/` folder contains the ready-to-publish static site with all 121 video
+The `docs/` folder contains the ready-to-publish static site with all 35 video
 records, thumbnails, the hero image, search, filters, and embedded video players.
 No dependency installation or build service is needed to publish this folder.
+
+The current collection contains only the 35 videos in the selected
+[Drive folder](https://drive.google.com/drive/folders/14TMakhjd32Dm0MtW4FImvljjJsg99cB3).
+`content/drive-videos.json` is its verified inventory. Run
+`node scripts/refresh-catalog.mjs` after changing that inventory, retrieve new
+thumbnails with `python scripts/download-thumbnails.py`, then rebuild Pages.
 
 1. Open this repository's **Settings → Pages**.
 2. Under **Build and deployment**, select **Deploy from a branch**.
@@ -71,7 +77,7 @@ Run `npm run dev` for the local preview after applying the generated local datab
 ## Windows preview without the Workers runtime
 
 Run `npm run dev:preview`, then open `http://127.0.0.1:5173`.
-This uses Node only and displays the bundled 121-video collection, search,
+This uses Node only and displays the bundled 35-video collection, search,
 filters, and video players. Refresh the browser after editing files.
 It is a read-only preview: it does not load the hosted collection's saved edits
 or enable owner controls. Use `npm run dev` for the full authenticated editor

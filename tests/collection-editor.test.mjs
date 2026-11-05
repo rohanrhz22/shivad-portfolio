@@ -26,7 +26,7 @@ test('reordered and removed films persist locally and export with no edit permis
   const output = JSON.parse(api.exportLayout(state));
   assert.deepEqual(output.state, JSON.parse(JSON.stringify(state)));
   assert.equal(output.canEdit, false);
-  assert.equal(output.state.items.length, 121);
+  assert.equal(output.state.items.length, 35);
   output.state.items[0].hidden = false;
   assert.ok(api.valid(output.state), 'removed films remain restorable');
 });

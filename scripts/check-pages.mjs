@@ -18,8 +18,10 @@ for (const [, name] of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)) {
 const sandbox = { window: {} };
 vm.runInNewContext(await readFile(new URL('catalog.js', root), 'utf8'), sandbox);
 const films = sandbox.window.FILMS;
-assert.equal(films.length, 121);
-assert.equal(new Set(films.map(f => f.id)).size, 121);
+const inventory = JSON.parse(await readFile(new URL('../content/drive-videos.json', root), 'utf8'));
+assert.deepEqual(Array.from(films, film => film.id).sort(), inventory.files.map(file => file.id).sort());
+assert.equal(films.length, 35);
+assert.equal(new Set(films.map(f => f.id)).size, 35);
 for (const film of films) {
   assert.ok(film.image.startsWith('assets/'));
   await access(new URL(film.image, root));
@@ -28,4 +30,4 @@ const collection = JSON.parse(await readFile(new URL('collection.json', root), '
 assert.equal(collection.canEdit, false);
 assert.ok(collection.state === null || validateState(collection.state, films.map(f => f.id)));
 await access(new URL('.nojekyll', root));
-console.log('Pages checks passed: relative URLs, all 121 films and thumbnails, valid collection, browser editor and export controls.');
+console.log('Pages checks passed: relative URLs, all 35 films and thumbnails, valid collection, browser editor and export controls.');

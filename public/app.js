@@ -3,7 +3,7 @@
   let films = [];
   const $ = selector => document.querySelector(selector);
   const categories = ['All films', 'Brand films', 'Products', 'Spaces', 'Presentations', 'People & stories', 'Experiments'];
-  const featuredIds = ['cfu-XLeZXH4','13XfIpgDFnW89iUTpTxB9p-p1uXIV0w7D','1CtdcPCaLHccBGir5st1dAYHiLr_Ce2CI','kuUCt8yEowc','UGoMkOqnYiI'];
+  const featuredIds = window.PORTFOLIO_FEATURED || [];
   let featured = [];
   let selectedCategory = 'All films', visibleCount = 12, filtered = [...films], playlist = [], currentIndex = 0, opener = null;
   const dialog = $('#player');
