@@ -7,6 +7,9 @@
   let featured = [];
   let selectedCategory = 'All films', visibleCount = 12, filtered = [...films], playlist = [], currentIndex = 0, opener = null;
   const dialog = $('#player');
+  // A narrow desktop viewport does not reproduce Drive's Android touch controls.
+  // Use Drive's own page on small/touch screens instead of its clipped embed.
+  const directPlayback = window.matchMedia('(max-width: 767px), (pointer: coarse)');
   let playerRatio = 16 / 9, playerGeneration = 0, loadingTimer, savedScroll = 0;
   const stage = $('.player-stage');
   function sizePlayer() {
@@ -20,9 +23,11 @@
   new ResizeObserver(sizePlayer).observe(stage);
   document.querySelectorAll('[data-total]').forEach(el => el.textContent = films.length);
   function card(film, index, collection) {
-    const button = document.createElement('button');
+    const button = document.createElement('a');
     button.className = 'film-card';
-    button.type = 'button';
+    button.href = film.url;
+    button.target = '_blank';
+    button.rel = 'noopener noreferrer';
     button.setAttribute('aria-label', `Watch ${film.title}, ${film.category}`);
     const picture = document.createElement('div'); picture.className = 'film-image';
     const img = document.createElement('img'); img.src = film.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
@@ -36,7 +41,18 @@
     const category = document.createElement('p'); category.textContent = collection === 'featured' ? film.category : `${film.category} · ${film.sourceLabel}`;
     const arrow = document.createElement('span'); arrow.textContent = '↗'; arrow.setAttribute('aria-hidden','true');
     copy.append(title, category); meta.append(copy, arrow); button.append(picture, meta);
-    button.addEventListener('click', () => openPlayer(film, collection === 'featured' ? featured : filtered, button));
+    if (film.platform === 'drive') {
+      const hint = document.createElement('span');
+      hint.className = 'direct-playback-hint';
+      hint.textContent = 'Play in Google Drive · opens a new tab ↗';
+      copy.append(hint);
+    }
+    button.addEventListener('click', event => {
+      // Keep native link navigation: no popup scripting, and the portfolio stays open.
+      if ((film.platform === 'drive' && directPlayback.matches) || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      openPlayer(film, collection === 'featured' ? featured : filtered, button);
+    });
     return button;
   }
   function refresh(state) {

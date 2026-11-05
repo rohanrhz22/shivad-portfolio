@@ -108,6 +108,9 @@ dialog{color:var(--ink);background:#111;border:1px solid #493035;padding:24px;wi
 @media(max-width:360px){.career-timeline li{flex-direction:column;gap:8px}.profile-foundations{grid-template-columns:1fr}.profile-foundations>section+section{border-left:0;border-top:1px solid var(--line);padding:24px 0 0}}
 
 /* Keep the video and its controls in one viewport, including mobile landscape. */
+.film-card{display:block}
+.direct-playback-hint{display:none}
+@media(max-width:767px),(pointer:coarse){.direct-playback-hint{display:block;margin-top:10px;font-size:11px;line-height:1.5;color:#f0757e}}
 body.video-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 #player{width:min(1080px,calc(100vw - 32px));height:min(900px,94dvh);max-width:none;max-height:none;margin:auto;padding:20px;overflow:hidden}
 #player[open]{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:14px}

@@ -5,17 +5,17 @@
         "id": "1_k1O-gcdrVL6523aZH7zMf7j08uS9wUG",
         "category": "Brand films",
         "hidden": false,
-        "featured": false
-      },
-      {
-        "id": "1E5pgnsssPoCTrmSbklQkKWe4kcOpqo14",
-        "category": "Brand films",
-        "hidden": false,
         "featured": true
       },
       {
+        "id": "1E5pgnsssPoCTrmSbklQkKWe4kcOpqo14",
+        "category": "Presentations",
+        "hidden": false,
+        "featured": false
+      },
+      {
         "id": "1Ok8ypqyv_ks03uNI6tsQABusbcL5M0u6",
-        "category": "Experiments",
+        "category": "Products",
         "hidden": false,
         "featured": false
       },
@@ -27,7 +27,7 @@
       },
       {
         "id": "1v6YtoCl__iYgGPeqgPtMQB4g1beqUhLL",
-        "category": "Experiments",
+        "category": "Products",
         "hidden": false,
         "featured": false
       },
@@ -45,7 +45,7 @@
       },
       {
         "id": "1AdEkuYKhagcVjdT7FIwDKbUVtPrmvK1q",
-        "category": "Experiments",
+        "category": "Presentations",
         "hidden": false,
         "featured": false
       },
@@ -57,7 +57,7 @@
       },
       {
         "id": "1T1FlVml9D85pe9wdI0JM13GOZ4xBVSbm",
-        "category": "Experiments",
+        "category": "Presentations",
         "hidden": false,
         "featured": false
       },
@@ -65,13 +65,13 @@
         "id": "1ZIvGOU9BGWzP3gSz4_TuVmZ2ZMZaTAZk",
         "category": "Products",
         "hidden": false,
-        "featured": true
+        "featured": false
       },
       {
         "id": "1xy1fMqeIuJi9oJxPSvYxlMMkeOB0BJaF",
-        "category": "Products",
+        "category": "Brand films",
         "hidden": false,
-        "featured": true
+        "featured": false
       },
       {
         "id": "1-dquo0xHbrTL_EHz730TNmEoMAqgpH2Z",
@@ -101,13 +101,13 @@
         "id": "1nakE_DJlEaFc0kPh16Qgfn63HtqRDyC3",
         "category": "Spaces",
         "hidden": false,
-        "featured": true
+        "featured": false
       },
       {
         "id": "1zR4j4TDx1oMOuHNhV9BZhq-4c-uheh2Y",
         "category": "Products",
         "hidden": false,
-        "featured": true
+        "featured": false
       },
       {
         "id": "1w-t699lWYQWKrMtY91b9HJcVNKdo6Q3c",
@@ -153,13 +153,13 @@
       },
       {
         "id": "1wFZnM33rOFONB2DFwwk1PxZwnBLQkv97",
-        "category": "Brand films",
+        "category": "Products",
         "hidden": false,
         "featured": false
       },
       {
         "id": "1u-fhD4V95r6x2xnxgLveDzVmqWgDVbmc",
-        "category": "Brand films",
+        "category": "Presentations",
         "hidden": false,
         "featured": false
       },
@@ -171,7 +171,7 @@
       },
       {
         "id": "1FgG3vFgHXb7yxXpGEJo8F-AN6ODN7m-3",
-        "category": "Brand films",
+        "category": "People & stories",
         "hidden": false,
         "featured": false
       },
@@ -183,7 +183,7 @@
       },
       {
         "id": "1S9zG9V9EPrznGoBPE0coZ9bhP88Jg05A",
-        "category": "Brand films",
+        "category": "Presentations",
         "hidden": false,
         "featured": false
       },
@@ -195,7 +195,7 @@
       },
       {
         "id": "1wezPTqoJSknIzvcTxf8B1mDFhBiBdRU9",
-        "category": "Products",
+        "category": "Brand films",
         "hidden": false,
         "featured": false
       },
@@ -207,7 +207,7 @@
       },
       {
         "id": "1qHyEahzcx24ZJTYDw71i1_UkwYHrvmSo",
-        "category": "Brand films",
+        "category": "Presentations",
         "hidden": false,
         "featured": false
       }
