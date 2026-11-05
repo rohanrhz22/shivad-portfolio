@@ -7,6 +7,17 @@
   let featured = [];
   let selectedCategory = 'All films', visibleCount = 12, filtered = [...films], playlist = [], currentIndex = 0, opener = null;
   const dialog = $('#player');
+  let playerRatio = 16 / 9, playerGeneration = 0, loadingTimer, savedScroll = 0;
+  const stage = $('.player-stage');
+  function sizePlayer() {
+    if (!dialog.open) return;
+    // Drive's controls need a usable width even for a vertical film in landscape.
+    const width = Math.floor(Math.max(Math.min(320, stage.clientWidth), Math.min(stage.clientWidth, stage.clientHeight * playerRatio)));
+    const frame = $('#player-frame');
+    frame.style.width = `${width}px`;
+    frame.style.height = `${Math.floor(Math.min(stage.clientHeight, width / playerRatio))}px`;
+  }
+  new ResizeObserver(sizePlayer).observe(stage);
   document.querySelectorAll('[data-total]').forEach(el => el.textContent = films.length);
   function card(film, index, collection) {
     const button = document.createElement('button');
@@ -71,25 +82,64 @@
   function openPlayer(film, collection, trigger) {
     opener = trigger; playlist = [...collection]; currentIndex = playlist.findIndex(f => f.id === film.id);
     if (currentIndex < 0) {playlist = [film]; currentIndex = 0;}
-    updatePlayer(); dialog.showModal(); $('#close-player').focus();
+    savedScroll = window.scrollY;
+    document.body.style.top = `-${savedScroll}px`;
+    document.body.classList.add('video-open');
+    dialog.showModal(); updatePlayer(); $('#close-player').focus({preventScroll:true});
   }
   function updatePlayer() {
     const film = playlist[currentIndex];
+    const generation = ++playerGeneration;
+    clearTimeout(loadingTimer);
+    playerRatio = 16 / 9;
+    sizePlayer();
+    // Drive's thumbnail preserves each film's orientation, including vertical cuts.
+    const poster = new Image();
+    poster.onload = () => {
+      if (generation !== playerGeneration || !dialog.open) return;
+      if (poster.naturalWidth && poster.naturalHeight) playerRatio = poster.naturalWidth / poster.naturalHeight;
+      sizePlayer();
+    };
+    poster.src = film.image;
     $('#player-title').textContent = film.title; $('#player-category').textContent = film.category;
     $('#player-original').textContent = `Original: ${film.originalTitle}`;
     $('#original-link').href = film.url;
-    $('#playback-note').textContent = `Playback via ${film.platform === 'youtube' ? 'YouTube' : 'Google Drive'}. If it doesn’t load, open the original.`;
+    $('#original-link').textContent = `Open in ${film.platform === 'youtube' ? 'YouTube' : 'Google Drive'} ↗`;
+    $('#player-position').textContent = `${currentIndex + 1} / ${playlist.length}`;
+    $('#playback-note').textContent = 'Loading the video player…';
     const iframe = document.createElement('iframe');
     iframe.title = film.title;
     iframe.src = film.platform === 'youtube' ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(film.id)}?autoplay=1&rel=0` : `https://drive.google.com/file/d/${encodeURIComponent(film.id)}/preview`;
     iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; iframe.allowFullscreen = true;
     iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    // A cross-origin frame's load event cannot tell us whether its video is playing.
+    iframe.addEventListener('load', () => {
+      if (generation !== playerGeneration || !dialog.open) return;
+      clearTimeout(loadingTimer);
+      $('#playback-note').textContent = 'Tap ▶ inside the video to play. Stuck? Reload or open it directly.';
+    }, {once:true});
+    iframe.addEventListener('error', () => {
+      if (generation === playerGeneration && dialog.open) $('#playback-note').textContent = 'The player could not load. Reload or open the video directly.';
+    }, {once:true});
+    loadingTimer = setTimeout(() => {
+      if (generation === playerGeneration && dialog.open) $('#playback-note').textContent = 'Taking longer than expected? Reload or open the video directly.';
+    }, 15000);
     $('#player-frame').replaceChildren(iframe);
     $('#previous').disabled = currentIndex === 0; $('#next').disabled = currentIndex === playlist.length - 1;
   }
   $('#close-player').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', e => {if(e.target === dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-  dialog.addEventListener('close', () => {$('#player-frame').replaceChildren(); if(opener?.isConnected) opener.focus({preventScroll:true});});
+  dialog.addEventListener('close', () => {
+    ++playerGeneration; clearTimeout(loadingTimer);
+    $('#player-frame').replaceChildren();
+    document.body.classList.remove('video-open'); document.body.style.top = '';
+    const previousBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, savedScroll);
+    document.documentElement.style.scrollBehavior = previousBehavior;
+    if(opener?.isConnected) opener.focus({preventScroll:true});
+  });
+  $('#reload-player').addEventListener('click', updatePlayer);
   $('#previous').addEventListener('click', () => {if(currentIndex > 0){currentIndex--;updatePlayer();}});
   $('#next').addEventListener('click', () => {if(currentIndex < playlist.length - 1){currentIndex++;updatePlayer();}});
   $('#result-status').textContent='Loading the collection…';
