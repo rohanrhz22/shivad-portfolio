@@ -95,9 +95,14 @@
   $('#result-status').textContent='Loading the collection…';
   fetch(document.documentElement.dataset.collectionUrl || '/api/portfolio',{cache:'no-store'}).then(async response=>{
     if(!response.ok) throw new Error('Could not load collection');
-    const data=await response.json(); window.portfolioData=data; refresh(data.state);
+    const data=await response.json();
+    if (document.documentElement.dataset.pagesEditor === 'true') {
+      window.publishedPortfolioData = structuredClone(data);
+      data.state = window.PagesCollection.load(data.state);
+    }
+    window.portfolioData=data; refresh(data.state);
     const manageButton = $('#manage-open');
-    if (manageButton) manageButton.hidden=!data.canEdit;
+    if (manageButton) manageButton.hidden=!(data.canEdit || document.documentElement.dataset.pagesEditor === 'true');
     window.dispatchEvent(new Event('portfolio-ready'));
   }).catch(()=>{ $('#collection-error').hidden=false; $('#result-status').textContent='The collection is temporarily unavailable.'; $('#load-more').hidden=true; $('#show-all').hidden=true; });
 })();

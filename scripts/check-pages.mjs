@@ -7,7 +7,11 @@ const root = new URL('../docs/', import.meta.url);
 const html = await readFile(new URL('index.html', root), 'utf8');
 assert.match(html, /data-collection-url="\.\/collection.json"/);
 assert.doesNotMatch(html, /(?:href|src)="\/(?!\/)/);
-assert.doesNotMatch(html, /id="manager"|id="manage-open"|src="\.\/manager.js"/);
+assert.match(html, /data-pages-editor="true"/);
+assert.match(html, /id="manage-open"/);
+assert.match(html, /id="manage-download"/);
+assert.match(html, /src="\.\/collection-editor.js"/);
+assert.match(html, /src="\.\/manager.js"/);
 for (const [, name] of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)) {
   await access(new URL(name, root));
 }
@@ -24,4 +28,4 @@ const collection = JSON.parse(await readFile(new URL('collection.json', root), '
 assert.equal(collection.canEdit, false);
 assert.ok(collection.state === null || validateState(collection.state, films.map(f => f.id)));
 await access(new URL('.nojekyll', root));
-console.log('Pages checks passed: relative URLs, all 121 films and thumbnails, valid collection, no owner controls.');
+console.log('Pages checks passed: relative URLs, all 121 films and thumbnails, valid collection, browser editor and export controls.');

@@ -18,7 +18,26 @@ and `docs/` folder. These commands require Node.js but no installed packages.
 Run `python -m http.server 4174` from the repository root and open
 `http://127.0.0.1:4174/docs/` to preview the published files locally.
 
-GitHub Pages serves a static collection snapshot from `content/collection.json`.
+### Rearrange or remove films on GitHub Pages
+
+1. Open the page and choose **Manage videos** in the footer.
+2. Drag rows or use **↑ / ↓** to rearrange. Choose **Remove** to hide a film.
+   Enable **Show removed**, then choose **Restore** to bring it back.
+3. Choose **Save preview** to keep the changes in this browser.
+4. To update the public site, choose **Download layout**, then expand
+   **Publish for everyone** and open its GitHub upload link.
+5. Upload the downloaded `collection.json` into the repository's `docs/`
+   folder, replacing the existing file, and commit to `main`. GitHub Pages
+   publishes the updated collection after deployment completes.
+
+Anyone can preview their own layout, but publishing requires repository access.
+No original Drive or YouTube video is deleted. **Use published layout** clears
+the browser preview. A new published collection automatically supersedes an
+older saved browser preview.
+
+GitHub Pages serves a static collection snapshot from `docs/collection.json`.
+The builder preserves that file when rebuilding; `content/collection.json`
+seeds the first export when no published snapshot exists.
 A `null` state uses the bundled catalog's default ordering and selection.
 To curate the snapshot manually, set `state.items` to all catalog IDs in the
 desired order, with `id`, `category`, `hidden`, and `featured` on each item.
@@ -26,8 +45,8 @@ The export validates the complete collection and allows up to six visible
 featured films. Rebuild and push to publish changes.
 
 The server-backed source is also retained in this repository. Owner sign-in,
-database saves, and editing across devices require its original Sites/Workers
-hosting; they are omitted from the Pages export. Changes made on the hosted
+database saves, and direct editing across devices require its original Sites/Workers
+hosting. The Pages editor uses browser storage and downloadable layouts instead. Changes made on the hosted
 site do not automatically update the static snapshot. Video playback still
 depends on the original Google Drive and YouTube sharing permissions.
 

@@ -1,6 +1,7 @@
 'use strict';
 (() => {
   const $=s=>document.querySelector(s), dialog=$('#manager');
+  const pagesMode=document.documentElement.dataset.pagesEditor === 'true';
   const categories=['Brand films','Products','Spaces','Presentations','People & stories','Experiments'];
   const defaults=['cfu-XLeZXH4','13XfIpgDFnW89iUTpTxB9p-p1uXIV0w7D','1CtdcPCaLHccBGir5st1dAYHiLr_Ce2CI','kuUCt8yEowc','UGoMkOqnYiI'];
   const originals=new Map(window.FILMS.map(f=>[f.id,f]));
@@ -13,7 +14,7 @@
     try{const response=await fetch('/api/portfolio',{cache:'no-store'});if(!response.ok)throw new Error('Could not reload. Please retry.');window.portfolioData=await response.json();resetDraft();window.refreshPortfolio(window.portfolioData.state);reload.hidden=true;message('Latest saved collection loaded. You can edit it now.');}catch(error){message(error.message);}finally{reload.disabled=false;}
   });
   const message=text=>$('#save-status').textContent=text;
-  function changed(){dirty=true;$('#manage-save').disabled=false;message('Unsaved changes. Save to update the portfolio on every device.');}
+  function changed(){dirty=true;$('#manage-save').disabled=false;message(pagesMode?'Unsaved changes. Save preview to keep this layout on this browser, or download it to publish.':'Unsaved changes. Save to update the portfolio on every device.');}
   function resetDraft(){
     const data=window.portfolioData; revision=data.revision;
     draft=structuredClone(data.state?.items || window.FILMS.map(f=>({id:f.id,category:f.category,hidden:false,featured:defaults.includes(f.id)})));
@@ -49,7 +50,7 @@
     if(!rows.length){const p=document.createElement('p');p.className='manager-empty';p.textContent=removed?'No removed videos match your search.':'No videos match your search.';$('#manage-list').append(p);}
     if(saving)$('#manage-list').querySelectorAll('button,input,select').forEach(x=>x.disabled=true);
   }
-  $('#manage-open').addEventListener('click',()=>{if(!window.portfolioData?.canEdit)return; resetDraft();message('Changes appear on the portfolio after saving.');dialog.showModal();});
+  $('#manage-open').addEventListener('click',()=>{if(!window.portfolioData || (!pagesMode&&!window.portfolioData.canEdit))return; resetDraft();message(pagesMode?'Preview changes stay on this browser. Download the layout and upload it to GitHub to update the public page.':'Changes appear on the portfolio after saving.');dialog.showModal();});
   const close=()=>{if(saving)return;if(dirty&&!confirm('Discard your unsaved changes?'))return;dirty=false;dialog.close();$('#manage-open').focus();};
   $('#manager-close').addEventListener('click',close);dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
   $('#manage-search').addEventListener('input',render);$('#manage-removed').addEventListener('change',render);
@@ -57,11 +58,36 @@
   $('#manage-save').addEventListener('click',async()=>{
     if(!dirty||saving)return;saving=true;$('#manage-save').disabled=true;$('#manage-discard').disabled=true;$('#manager-close').disabled=true;render();message('Saving your collection…');
     try{
+      if(pagesMode){
+        const state=structuredClone({items:draft});
+        window.PagesCollection.save(state,window.publishedPortfolioData.state);
+        window.portfolioData={state,revision:0,canEdit:false};dirty=false;
+        window.refreshPortfolio(state);message('Preview saved on this browser. To update everyone’s page, download the layout and follow Publish for everyone.');
+        return;
+      }
       const response=await fetch('/api/portfolio',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision,state:{items:draft}})});
       const data=await response.json();if(response.status===409)reload.hidden=false;if(!response.ok)throw new Error(data.error||'Could not save changes. Please retry.');
       window.portfolioData=data;revision=data.revision;dirty=false;window.refreshPortfolio(data.state);message('Saved. Your collection is updated across devices.');
     }catch(error){message(error.message);}
     finally{saving=false;$('#manage-save').disabled=!dirty;$('#manage-discard').disabled=false;$('#manager-close').disabled=false;render();}
   });
+  if(pagesMode){
+    $('#manage-download').addEventListener('click',()=>{
+      try{
+        const text=window.PagesCollection.exportLayout({items:draft});
+        const url=URL.createObjectURL(new Blob([text],{type:'application/json'}));
+        const link=document.createElement('a');link.href=url;link.download='collection.json';document.body.append(link);link.click();link.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+        message('Layout downloaded as collection.json. Follow Publish for everyone to upload it to GitHub.');
+      }catch(error){message(error.message);}
+    });
+    $('#manage-published').addEventListener('click',()=>{
+      if(!confirm('Clear your browser preview and use the currently published layout? Unsaved changes will be discarded.'))return;
+      try{
+        window.PagesCollection.reset();window.portfolioData=structuredClone(window.publishedPortfolioData);resetDraft();
+        window.refreshPortfolio(window.portfolioData.state);message('Published layout restored on this browser.');
+      }catch(error){message(error.message);}
+    });
+  }
   window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 })();
