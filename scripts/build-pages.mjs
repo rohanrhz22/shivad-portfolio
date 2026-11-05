@@ -18,6 +18,8 @@ for (const name of ['assets', 'theme.css', 'app.js', 'catalog.js', 'favicon.svg'
   await cp(new URL(`public/${name}`, root), new URL(name, output), { recursive: true });
 }
 let html = await readFile(new URL('content/index.html', root), 'utf8');
+const career = await readFile(new URL('content/career.html', root), 'utf8');
+html = html.replace('<!-- CAREER_PROFILE -->', career);
 html = html.replace('<html lang="en">', '<html lang="en" data-collection-url="./collection.json" data-pages-editor="true">')
   .replace(/\b(href|src)="\/(?!\/)/g, '$1="./')
   .replace('<script src="./app.js" defer>', '<script src="./collection-editor.js" defer></script><script src="./app.js" defer>')

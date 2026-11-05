@@ -66,3 +66,43 @@ dialog{color:var(--ink);background:#111;border:1px solid #493035;padding:24px;wi
 
 
 .pages-publish{margin:16px 30px;padding:16px;border:1px solid #493035;background:#191112;font-size:12px;line-height:1.7;color:var(--muted)}.pages-publish details{margin-top:12px}.pages-publish summary{cursor:pointer;color:#f0757e;font-weight:600}.pages-publish ol{padding-left:20px;margin:12px 0 0}.pages-publish a{color:#f0757e;text-decoration:underline}.manager-actions{flex-wrap:wrap}.manager-actions p{min-width:220px}@media(max-width:600px){.pages-publish{margin:12px 16px;font-size:11px}.manager-actions{gap:10px}.manager-actions .secondary{font-size:10px}}
+
+.career-profile{margin-top:64px;padding-top:40px;border-top:1px solid var(--line)}
+.career-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7%}
+.profile-heading{font-size:14px;line-height:1.4;text-transform:uppercase;letter-spacing:1.4px;font-weight:600;margin:0 0 28px}
+.career-timeline,.accomplishment-list,.profile-languages,.profile-software ul{list-style:none;margin:0;padding:0}
+.career-timeline{display:grid;gap:26px}
+.career-timeline li{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.career-timeline li>div{min-width:0}
+.career-profile h4{font-size:16px;line-height:1.5;font-weight:500;margin:0 0 4px}
+.career-profile p,.accomplishment-list{font-size:14px;line-height:1.8;color:var(--muted)}
+.career-profile p{overflow-wrap:anywhere}
+.career-date{display:inline-block;border:1px solid #49383a;border-radius:30px;padding:5px 11px;color:var(--muted);font-size:11px;line-height:1.4;white-space:nowrap;flex-shrink:0}
+.accomplishment-list{display:grid;gap:24px}
+.accomplishment-list li{position:relative;padding-left:18px}
+.accomplishment-list li:before{content:'';position:absolute;left:0;top:10px;width:5px;height:5px;background:var(--red)}
+.profile-foundations{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.65fr) minmax(0,1.8fr);gap:30px;margin-top:42px;padding-top:36px;border-top:1px solid var(--line)}
+.profile-foundations>section+section{border-left:1px solid var(--line);padding-left:30px}
+.profile-degree .career-date{margin-top:14px}
+.profile-languages{font-size:14px;line-height:1.9;color:var(--muted)}
+.profile-software ul{display:flex;flex-wrap:wrap;gap:18px 12px}
+.profile-software li{flex:1 1 65px;max-width:100px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;font-size:10px;line-height:1.5;color:var(--muted)}
+.software-mark{width:46px;height:46px;display:grid;place-items:center;border:1px solid #7c5b39;border-radius:50%;background:#1b1410;color:#d0aa75;font-size:19px;font-weight:600}
+@media(max-width:1000px){
+  .career-grid{gap:36px}.career-timeline li{align-items:flex-start;flex-direction:column;gap:8px}
+  .profile-foundations{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .profile-foundations .profile-software{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);padding:28px 0 0}
+}
+@media(max-width:600px){
+  .career-profile{margin-top:36px;padding-top:28px}.career-grid{grid-template-columns:1fr;gap:36px}
+  .profile-heading{font-size:13px;margin-bottom:20px;letter-spacing:1px}
+  .career-timeline{gap:24px}.career-profile h4{font-size:15px}
+  .career-timeline li{flex-direction:row;align-items:flex-start;gap:12px}
+  .career-profile p,.accomplishment-list,.profile-languages{font-size:13px}
+  .career-date{font-size:10px;padding:5px 8px}.career-timeline li>div{flex:1}
+  .profile-foundations{gap:24px 18px;margin-top:30px;padding-top:28px}
+  .profile-foundations>section+section{padding-left:18px}
+  .profile-foundations .profile-software{padding-left:0}
+  .profile-software ul{gap:18px 10px}.profile-software li{flex-basis:75px;max-width:100px;font-size:11px}
+}
+@media(max-width:360px){.career-timeline li{flex-direction:column;gap:8px}.profile-foundations{grid-template-columns:1fr}.profile-foundations>section+section{border-left:0;border-top:1px solid var(--line);padding:24px 0 0}}
