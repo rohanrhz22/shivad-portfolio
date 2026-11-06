@@ -8,5 +8,6 @@ window.PLAYBACK_SOURCES = {
   "1bqBR5NcF4IdFncZUFv8KheBGTbli2sd-": "CZHByUEOV0I",
   "1wezPTqoJSknIzvcTxf8B1mDFhBiBdRU9": "xXuU_1Qx-_I",
   "1-dquo0xHbrTL_EHz730TNmEoMAqgpH2Z": "oxY_1tFHPoM",
-  "1XM7zYC5bea4nWUuOnyfyZMpWcVeItE7G": "qLaOclx_7IY"
+  "1XM7zYC5bea4nWUuOnyfyZMpWcVeItE7G": "qLaOclx_7IY",
+  "17KH6vWVslVHI9GVqU6_DYGcn1OKvzXe0": "03Wq3jdCblI"
 };
