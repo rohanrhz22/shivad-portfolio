@@ -18,6 +18,15 @@ for (const [, name] of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)) {
 const sandbox = { window: {} };
 vm.runInNewContext(await readFile(new URL('catalog.js', root), 'utf8'), sandbox);
 const films = sandbox.window.FILMS;
+assert.match(html, /src="\.\/playback-sources.js"/);
+vm.runInNewContext(await readFile(new URL('playback-sources.js', root), 'utf8'), sandbox);
+const sources = sandbox.window.PLAYBACK_SOURCES;
+assert.ok(sources && typeof sources === 'object');
+for (const [driveId, youtubeId] of Object.entries(sources)) {
+  assert.ok(films.some(film => film.id === driveId), `Unknown film in playback sources: ${driveId}`);
+  assert.match(youtubeId, /^[A-Za-z0-9_-]{11}$/, `Invalid YouTube ID for ${driveId}`);
+}
+assert.equal(new Set(Object.values(sources)).size, Object.keys(sources).length, 'Duplicate YouTube video mapping');
 const inventory = JSON.parse(await readFile(new URL('../content/drive-videos.json', root), 'utf8'));
 assert.deepEqual(Array.from(films, film => film.id).sort(), inventory.files.map(file => file.id).sort());
 assert.equal(films.length, 35);

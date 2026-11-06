@@ -70,6 +70,20 @@ Removal does not delete the original video. Unsaved edits are not published. If 
 
 ## Development
 
+### In-page video playback
+
+`public/playback-sources.js` maps the existing Drive catalog IDs to unlisted
+YouTube video IDs. Keep the Drive IDs in the catalog and collection so published
+layouts and saved browser previews retain their order, categories, and selection.
+Add a mapping only after YouTube has finished SD processing and the video is
+unlisted and playable. Mapped videos use the in-page YouTube player on mobile
+and desktop; unmapped Drive videos keep their existing fallback.
+
+After editing a mapping, run `npm run build:pages` and `npm run check:pages`,
+then publish the generated `docs` files. Check actual embedded playback as well
+as the mobile layout; resizing a desktop Drive iframe alone does not reproduce
+Android's Drive controls.
+
 The authored page is `content/index.html`; scripts, styling, and images are in `public/`. The API route uses `server/portfolio.mjs` and the D1 schema in `db/schema.ts`. The site identity and logical database binding are preserved in `.openai/hosting.json`.
 
 Run `npm run dev` for the local preview after applying the generated local database migration. Run `node --test tests/portfolio.test.mjs` for backend checks. `node tests/preview-check.mjs` exercises the running local preview and restores its previous collection state. Use the Sites build and source-workflow helpers to package and publish.

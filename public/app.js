@@ -14,18 +14,20 @@
   const stage = $('.player-stage');
   function sizePlayer() {
     if (!dialog.open) return;
-    // Drive's controls need a usable width even for a vertical film in landscape.
-    const width = Math.floor(Math.max(Math.min(320, stage.clientWidth), Math.min(stage.clientWidth, stage.clientHeight * playerRatio)));
+    // YouTube needs at least 200px in each dimension for usable controls.
+    const minimum = window.PLAYBACK_SOURCES?.[playlist[currentIndex]?.id] ? 200 : 320;
+    const width = Math.floor(Math.max(Math.min(minimum, stage.clientWidth), Math.min(stage.clientWidth, stage.clientHeight * playerRatio)));
     const frame = $('#player-frame');
     frame.style.width = `${width}px`;
-    frame.style.height = `${Math.floor(Math.min(stage.clientHeight, width / playerRatio))}px`;
+    frame.style.height = `${Math.floor(Math.min(stage.clientHeight, Math.max(Math.min(200, stage.clientHeight), width / playerRatio)))}px`;
   }
   new ResizeObserver(sizePlayer).observe(stage);
   document.querySelectorAll('[data-total]').forEach(el => el.textContent = films.length);
   function card(film, index, collection) {
     const button = document.createElement('a');
     button.className = 'film-card';
-    button.href = film.url;
+    const youtubeId = window.PLAYBACK_SOURCES?.[film.id];
+    button.href = youtubeId ? `https://www.youtube.com/watch?v=${encodeURIComponent(youtubeId)}` : film.url;
     button.target = '_blank';
     button.rel = 'noopener noreferrer';
     button.setAttribute('aria-label', `Watch ${film.title}, ${film.category}`);
@@ -41,7 +43,7 @@
     const category = document.createElement('p'); category.textContent = collection === 'featured' ? film.category : `${film.category} · ${film.sourceLabel}`;
     const arrow = document.createElement('span'); arrow.textContent = '↗'; arrow.setAttribute('aria-hidden','true');
     copy.append(title, category); meta.append(copy, arrow); button.append(picture, meta);
-    if (film.platform === 'drive') {
+    if (film.platform === 'drive' && !window.PLAYBACK_SOURCES?.[film.id]) {
       const hint = document.createElement('span');
       hint.className = 'direct-playback-hint';
       hint.textContent = 'Play in Google Drive · opens a new tab ↗';
@@ -49,7 +51,7 @@
     }
     button.addEventListener('click', event => {
       // Keep native link navigation: no popup scripting, and the portfolio stays open.
-      if ((film.platform === 'drive' && directPlayback.matches) || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      if ((film.platform === 'drive' && !window.PLAYBACK_SOURCES?.[film.id] && directPlayback.matches) || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
       openPlayer(film, collection === 'featured' ? featured : filtered, button);
     });
@@ -119,13 +121,14 @@
     poster.src = film.image;
     $('#player-title').textContent = film.title; $('#player-category').textContent = film.category;
     $('#player-original').textContent = `Original: ${film.originalTitle}`;
-    $('#original-link').href = film.url;
-    $('#original-link').textContent = `Open in ${film.platform === 'youtube' ? 'YouTube' : 'Google Drive'} ↗`;
+    const youtubeId = window.PLAYBACK_SOURCES?.[film.id] || (film.platform === 'youtube' ? film.id : null);
+    $('#original-link').href = youtubeId ? `https://www.youtube.com/watch?v=${encodeURIComponent(youtubeId)}` : film.url;
+    $('#original-link').textContent = `Open in ${youtubeId ? 'YouTube' : 'Google Drive'} ↗`;
     $('#player-position').textContent = `${currentIndex + 1} / ${playlist.length}`;
     $('#playback-note').textContent = 'Loading the video player…';
     const iframe = document.createElement('iframe');
     iframe.title = film.title;
-    iframe.src = film.platform === 'youtube' ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(film.id)}?autoplay=1&rel=0` : `https://drive.google.com/file/d/${encodeURIComponent(film.id)}/preview`;
+    iframe.src = youtubeId ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&playsinline=1&rel=0` : `https://drive.google.com/file/d/${encodeURIComponent(film.id)}/preview`;
     iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; iframe.allowFullscreen = true;
     iframe.referrerPolicy = 'strict-origin-when-cross-origin';
     // A cross-origin frame's load event cannot tell us whether its video is playing.

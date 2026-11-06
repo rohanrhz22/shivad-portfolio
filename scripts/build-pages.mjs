@@ -14,7 +14,7 @@ if (collection.state !== null && !validateState(collection.state, ids)) {
   throw new Error('The Pages collection must include all catalog IDs with valid settings.');
 }
 await mkdir(output, { recursive: true });
-for (const name of ['assets', 'theme.css', 'app.js', 'catalog.js', 'favicon.svg', 'manager.js', 'collection-editor.js']) {
+for (const name of ['assets', 'theme.css', 'app.js', 'catalog.js', 'favicon.svg', 'manager.js', 'collection-editor.js', 'playback-sources.js']) {
   await cp(new URL(`public/${name}`, root), new URL(name, output), { recursive: true });
 }
 let html = await readFile(new URL('content/index.html', root), 'utf8');
